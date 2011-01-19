@@ -1,0 +1,17 @@
+body {
+  font-family: Fun;
+  margin: 0px;
+  background: url("/misc_/FriedZopeBase.tests.testZope.MyProduct/large.jpg"); /* not registered */
+}
+
+apostrophes {
+  background: url('/misc_/FriedZopeBase.tests.testZope.MyProduct/image.jpg');
+}
+
+quotes {
+  background: url("/misc_/FriedZopeBase.tests.testZope.MyProduct/image.jpg");
+}
+
+lazy {
+  background: url(/misc_/FriedZopeBase.tests.testZope.MyProduct/image.jpg);
+}

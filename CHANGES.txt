@@ -1,0 +1,129 @@
+- 0.22 (peter)
+
+    Fixed all broken tests in testZope with and without slimmer
+    installed.
+    Vastly improved Zope.py and it's registerXXXFile functions.
+
+- 0.21 (peter)
+
+    Fixed important bug in sendEmailNG() that would try to send to and
+    from non-ascii emails (e.g. u'test@fry-it.com')
+
+- 0.20 (peter)
+
+    Added ukpostcode which exposes two useful methods:
+     valid_uk_postcode, format_uk_postcode
+     
+- 0.19 (peter)
+
+    Improvements to sendEmailNG() with support for charset parameter
+    
+    Improvements to html2plaintext when there is no body tag in the
+    email.
+    
+    Fix for getRedirectURL() where parameter 'params' wasn't reset
+    between usage. Always vary of using empty dicts or lists as default
+    parameter values.
+
+- 0.18 (lukasz)
+
+    Functions that register files are now return number of files 
+    registered
+    
+- 0.17
+
+    New feature: Made it possible to set environment variable
+    ABSOLUTE_MISC_URLS to get http://.../misc_/... instead of just
+    /misc_/...
+
+- 0.16
+
+    New feature: made sendEmailNG() smarter. If the 'debug' parameter
+    is a valid directory or a valid file it'll write to that instead
+    of stdout.
+
+- 0.15
+
+    Bug fixed: GzippedImageFile.index_html() had an error on 
+    self.original_content_size
+
+- 0.14
+
+    New feature: set_cookie() accepts 'across_domain_cookie_' which sets
+    the cookie acros multiple subdomains like 'm.peterbe.com' AND
+    'www.peterbe.com'
+    
+    New feature: attachImage() and attachImages() sets imagefiles into
+    classes as class attributes.
+    
+    New feature: Utils.iuniqify() does what uniqify does but case
+    insensitively if possible.
+    
+    New feature: http_redirect() can sniff for getRootURL() method.
+    
+- 0.13
+  
+    Bug fixed: doCache() rounded off hours if a float < 24 wrongly.
+    
+- 0.12
+  
+    Bug fixed: Zope.registerIcons() can now accept a list of strings
+    of imagenames.
+
+    New feature: registerIcon() prevents paths with '//' in them.
+
+- 0.11
+  
+    New feature: Added stopCache() and doCache() for HTTP header caching
+    
+- 0.10
+  
+    Bug fixed: sendEmail() sends the email differetly if the found
+    Mailhost is a SecureMailHost or regular MailHost object so that the
+    headers look right.
+    
+- 0.9
+  
+    New feature: sendEmail() takes a new parameter 'debug' which can
+    be a boolean or an object that has a 'write()' method eg. StringIO
+    instances or sys.stderr
+    
+- 0.8
+  
+    Bug fixed: registerIcons() accepts Globals=globals() parameter.
+    
+- 0.7
+  
+    Bug fixed: _deployImages() skips '.svn' and 'CVS' folders.
+
+    New feature: sendEmail() uses secureSend() if mailhost is
+    SecureMailHost
+    
+- 0.6
+
+    New feature: sendEmail(msg, to, from, subject, swallowerrors=False)
+
+    New feature: Added expire_cookie() method to Bases
+    
+- 0.5
+
+    New feature: http_redirect() can take a dict as second param or
+    applied keyword arguments and these are added to the URL.
+    
+- 0.4
+
+    New feature: Base http_redirect()
+    
+- 0.3
+
+    New feature: Added HomepageBTreeBase and 
+    HomepageBTreeBaseCatalogAware classes.
+    
+- 0.2
+
+    New feature: set_cookie() makes sure DateTime objects are
+    converted to RFC822 format.
+
+- 0.1
+
+    Project started.
