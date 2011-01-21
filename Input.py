@@ -11,7 +11,7 @@ import os, sys, re
 # Other Zope products
 from Utils import html_quote, niceboolean, unicodify
 
-__version__='1.3'
+__version__='1.4'
 
 #------------------------------------------------------------------------------
 
@@ -32,9 +32,9 @@ class InputwidgetNameError(Exception):
 
 #------------------------------------------------------------------------------
 class InputWidgets:
-    
-    
-    def inputwidgetTR(self, name, value=None, label=None, 
+
+
+    def inputwidgetTR(self, name, value=None, label=None,
                       mandatory=False, optional=False,
                       sup=None, sub=None,
                       type_=None, class_=None, **kw):
@@ -51,10 +51,10 @@ class InputWidgets:
                                              label=label, mandatory=mandatory,
                                              optional=optional,
                                              sub=sub, sup=sup,
-                                             type_=type_, class_=class_, **kw)    
-    
-    
-    def inputwidgetDT(self, name, value=None, label=None, 
+                                             type_=type_, class_=class_, **kw)
+
+
+    def inputwidgetDT(self, name, value=None, label=None,
                       mandatory=False, optional=False,
                       sub=None, sup=None,
                       type_=None, class_=None, **kw):
@@ -69,17 +69,17 @@ class InputWidgets:
                                             label=label, mandatory=mandatory,
                                             optional=optional,
                                             type_=type_, class_=class_, **kw)
-                                            
-    
+
+
     def _inputwidget_by_template(self, template, name,
-                                 value=None, label=None, 
+                                 value=None, label=None,
                                  mandatory=False, optional=False,
                                  sub=None, sup=None,
                                  type_=None, class_=None, **kw):
-                    
-        unicode_encoding = kw.get('unicode_encoding', 
+
+        unicode_encoding = kw.get('unicode_encoding',
                                getattr(self, 'UNICODE_ENCODING', 'UTF-8'))
-        
+
         # If the name passed to this function is 'title:latin1:ustring'
         # or 'price:float', create a new variable called name_full and change
         # the original variable name.
@@ -87,17 +87,17 @@ class InputWidgets:
         if name.find(':') > -1:
             name_full = name
             name = name_full.split(':')[0]
-            
+
         if len(name_full.split(':')) == 2 and name_full.split(':')[1] in ('ustring','utext'):
             # lazy! You didn't include the encoding
             name_full = name_full.split(':')[0] + ':%s:' % unicode_encoding + name_full.split(':')[1]
-            
+
         input_part = self.inputwidget(name_full, value, type_=type_, class_=class_,
                                       **kw)
-                   
+
         if label is None:
             label = self._name2label(name)
-        
+
         def isBiggerThan1Int(x):
             try:
                 return int(x) > 1
@@ -115,14 +115,14 @@ class InputWidgets:
             mandot = u' <span class="mandatory">*</span>'
         else:
             mandot = u''
-            
+
         if sub:
             subsup = '<sub>%s</sub>' % sub
         elif sup:
             subsup = '<sup>%s</sup>' % sup
         else:
             subsup = ''
-            
+
         if isinstance(optional, basestring):
             # keep 'optional' the way it is
             optional = unicodify(optional)
@@ -133,24 +133,24 @@ class InputWidgets:
             optional = u' <span class="optional">(optional)</span>'
         else:
             optional = u''
-        
+
         nameid = self._name2nameID(name)
         data = dict(nameid=nameid, input_part=input_part, label=label,
                     mandot=mandot, optional=optional, subsup=subsup)
         return template % data
 
-    
-    def inputwidget(self, name, value=None, type_=None, class_=None, 
+
+    def inputwidget(self, name, value=None, type_=None, class_=None,
                     options=None, **kw):
         """ Return the input part as a chunk of HTML. Most cases it's just an
         <input /> tag but this can be different depending on the value of
         type_. For example, if type_=='textarea' return a <textarea> tags
         etc.
         """
-        
-        unicode_encoding = kw.get('unicode_encoding', 
+
+        unicode_encoding = kw.get('unicode_encoding',
                                getattr(self, 'UNICODE_ENCODING', 'UTF-8'))
-        
+
         # If the name passed to this function is 'title:latin1:ustring'
         # or 'price:float', create a new variable called name_full and change
         # the original variable name.
@@ -158,25 +158,25 @@ class InputWidgets:
         if name.find(':') > -1:
             name_full = name
             name = name_full.split(':')[0]
-            
+
         if len(name_full.split(':')) == 2 and name_full.split(':')[1] in ('ustring','utext'):
             # lazy! You didn't include the encoding
             name_full = name_full.split(':')[0] + ':%s:' % unicode_encoding + name_full.split(':')[1]
-        
+
         # special case magic which saves a lot of typing the template code
         if value is None:
             # assume that they mean the REQUEST object
             value = self.REQUEST
-                        
+
         if hasattr(value, 'has_key') and hasattr(value, 'get'):
             # this means that the actual value wasn't given to us.
             # We were given a dictionary which we can dig through
-            # ourselfs. If we end up here, it's quite likely that the 
+            # ourselfs. If we end up here, it's quite likely that the
             # user called inputwidget() like this:
             #   here.inputwidget('first_name', request)
             if value.get(name) is not None:
                 # I know this looks odd but it makes perfect sense :)
-                value = value[name] 
+                value = value[name]
             else:
                 # the variable wasn't available in this dictionary. The
                 # default value will now depend on the type_
@@ -192,15 +192,15 @@ class InputWidgets:
                     raise InputwidgetTypeError, \
                     "Invalid type_. Can't guess default value"
 
-        # Now that we've fixed the value for the lazy people who just 
+        # Now that we've fixed the value for the lazy people who just
         # send a dict we can do some ...
         # ...some basic validation
         if name.strip() != name:
             raise InputwidgetNameError, "Name not stripped"
-        
+
         if not name.strip():
             raise InputwidgetNameError, "Name blank"
-        
+
         if type_ in (u'radio',):
             # the value can't be a list
             if isinstance(value, (list, tuple)):
@@ -210,29 +210,29 @@ class InputWidgets:
             # you can't have a multiple parameter to these
             if kw.get('multiple'):
                 raise InputwidgetTypeError, "Can't have multiple on type_ radio"
-            
+
         # check that the type_ is a recognized one
         if type_ not in (None, u'text', u'password', u'file', u'hidden', u'radio',
                          u'checkbox', u'textarea', u'select'):
             raise InputwidgetTypeError, "Unrecognized type_ option %r" % type_
 
         ##
-        ## Before we start rendering it, we might want to make things 
+        ## Before we start rendering it, we might want to make things
         ## smoother by being clever. Hopefully the code speaks for itself.
         ##
-        
-        
+
+
         if not kw.has_key(u'size') and not options:
             if type_ in (None, 'text') and len(unicode(value)) < 5:
                 if isinstance(value, (int, float)):
                     kw[u'size'] = 5
-                    
+
         if type_ == u'textarea':
             if not kw.has_key(u'rows'):
                 kw[u'rows'] = 10
             if not kw.has_key(u'cols'):
                 kw[u'cols'] = 70
-                
+
         if type_ == u'checkbox':
             if niceboolean(value):
                 value = "1"
@@ -240,7 +240,7 @@ class InputWidgets:
             else:
                 value = "1"
 
-                
+
         # Check for submiterrors
         error_message = ''
         if self.REQUEST.get('submiterrors', {}).get(name):
@@ -248,14 +248,14 @@ class InputWidgets:
             message = self.REQUEST.get('submiterrors').get(name)
             error_message = u'<span class="submiterror">%s</span><br/>'%\
                              html_quote(message)
-                
+
         if class_ is not None:
             kw[u'class'] = class_
-        
+
         if kw.get(u'class') and isinstance(kw.get(u'class'), (list, tuple)):
             kw[u'class'] = ' '.join(kw[u'class'])
 
-            
+
         # Decide and populate the right template
         if options and isinstance(options, (list, tuple)) and type_ not in ('radio','checkbox'):
             template = u'<select name="%(name)s" id="%(nameid)s" '
@@ -263,26 +263,34 @@ class InputWidgets:
 
         elif type_ == 'checkbox' and options and isinstance(options, (list, tuple)):
             html = ''
-            
+
         elif type_ in (None, u'text', u'password', u'file', u'hidden', u'checkbox'):
             template = u'<input type="%(type)s" id="%(nameid)s" name="%(name)s" value="%(value)s" '
             if type_ is None:
                 type_ = u'text'
             html = template % dict(type=type_, name=name_full, value=value,
                                    nameid=self._name2nameID(name))
-                
+
         elif type_ == u'textarea':
             template = u'<textarea name="%(name)s" id="%(nameid)s" '
             html = template % dict(name=name_full, nameid=self._name2nameID(name))
-            
+
         elif type_ == 'radio':
             html = ''
 
         if kw.get(u'pretext'):
             html = kw.get(u'pretext') + html
             kw.pop(u'pretext')
-            
-            
+
+        if 'readonly' in kw:
+            # to allow this to be None which can happen if you do this:
+            # <td tal:content="structure python:here.inputwidget(...,
+            #                             readonly=test(here.check_readonly()))
+            if kw.get('readonly'):
+                kw['readonly'] = 'readonly'
+            else:
+                del kw['readonly']
+
         if type_ != 'radio':
             for key, value_ in kw.items():
                 if key.endswith('__'):
@@ -293,49 +301,49 @@ class InputWidgets:
                 if key == 'multiple':
                     value_ = 'multiple'
                 html += u'%s="%s" ' % (key, value_)
-        
 
-                
+
+
         def isEqual(x, y):
             """ compare x and y and be aware of the careful_int_match__ """
             if x == y:
                 return True
-            
+
             if kw.get('careful_int_match__'):
                 try:
                     return int(x) == int(y)
                 except ValueError, TypeError:
                     pass
-                
+
             if kw.get('careful_float_match__'):
                 try:
                     return float(x) == float(y)
                 except ValueError, TypeError:
-                    pass                
-            
+                    pass
+
             return False
-        
+
         def isIn(x, yyy):
             if x in yyy:
                 return True
-            
+
             if kw.get('careful_int_match__'):
                 try:
                     return int(x) in [int(e) for e in yyy]
                 except ValueError, TypeError:
                     pass
-                
+
             if kw.get('careful_float_match__'):
                 try:
                     return float(x) in [float(e) for e in yyy]
                 except ValueError, TypeError:
-                    pass                
-            
+                    pass
+
             return False
-            
-                
+
+
         # wrap up
-        
+
         if type_ == u'textarea':
             html = html.strip()+ u'>'
             html += html_quote(value)
@@ -351,7 +359,7 @@ class InputWidgets:
                     option, label = option['key'], option['value']
                 else:
                     option, label = option, option
-                
+
                 if isEqual(option, value):
                     template = u'<input type="%(type_)s" name="%(name)s" id="%(valueid)s" value="%(value)s" checked="checked" '
                 else:
@@ -370,27 +378,27 @@ class InputWidgets:
                    dict(valueid=valueid, label=label)
                 html += kw.get('radio_label_delimiter__','<br/>')
             html = html.strip()
-            
+
         elif options and isinstance(options, (list, tuple)):
             html = html.strip() + u'>\n'
             preval = value
             if isinstance(preval, (tuple, list)) and not kw.get(u'multiple'):
                 raise InputwidgetValueError, "Pass multiple='multiple' if the value is an iterable"
             for option in options:
-                
+
                 if isinstance(option, (tuple, list)):
                     option, label = option
                 elif isinstance(option, dict):
                     option, label = option['key'], option['value']
                 else:
                     option, label = option, option
-                    
+
                 if isEqual(option, preval) or (kw.get(u'multiple') and option in preval):
                     html += u'<option value="%s" selected="selected">%s</option>\n'%\
                              (option, label)
                 else:
                     html += u'<option value="%s">%s</option>\n' % (option, label)
-                    
+
             html += u'</select>'
         elif type_ == 'select':
             # The type was 'select' but there weren't any options!
@@ -398,23 +406,22 @@ class InputWidgets:
         else:
             if type_ != 'radio':
                 html += u'/>'
-            
+
         if kw.get(u'posttext'):
             html += '<span class="input-posttext">%s</span>' % kw.get(u'posttext')
-            
-        
+
+
         # error_message is in most cases a empty string
         html += error_message
-        
+
         return html
 
-    
+
     def _name2nameID(self, name):
         """ return a suitable id based on the name """
-        
+
         return u'id_%s' % name
 
     def _name2label(self, name):
         """ if name is 'first_name' return 'First name' """
         return name.replace('_',' ').capitalize()
-    
